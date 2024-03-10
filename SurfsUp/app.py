@@ -1,6 +1,6 @@
 # Import the dependencies.
 import numpy as np
-
+import pandas as pd
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -13,19 +13,20 @@ from flask import Flask, jsonify
 #################################################
 # Database Setup
 #################################################
-engine = create_engine("sqlite:///hawaii.sqlite")
+engine = create_engine("sqlite:///Resources/hawaii.sqlite")
 
 # reflect an existing database into a new model
 Base = automap_base()
 
 # reflect the tables
-Base.prepare(autoload_with=engine)
+Base.prepare(engine, reflect=True)
 
 # Save references to each table
-
+Measurement = Base.classes.hawaii_measurements  
+Station = Base.classes.hawaii_stations
 
 # Create our session (link) from Python to the DB
-
+session = Session(engine)
 
 #################################################
 # Flask Setup
@@ -52,21 +53,15 @@ def precipitation():
     
     return jsonify(precipitation_data)
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
 @app.route("/api/v1.0/stations")
 def stations():
     # Query all stations from the dataset
-    stations = session.query(Measurement.station).distinct().all()
+    stations = session.query(Station.station).distinct().all()
     
     # Extract station names from the query results
     station_list = [station[0] for station in stations]
     
     return jsonify(station_list)
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 @app.route("/api/v1.0/tobs")
 def tobs():
@@ -88,10 +83,6 @@ def tobs():
     temperature_data = [{"date": date, "tobs": tobs} for date, tobs in results]
     
     return jsonify(temperature_data)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
 
 @app.route("/api/v1.0/<start>")
 def temperature_start(start):
