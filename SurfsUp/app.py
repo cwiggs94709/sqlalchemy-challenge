@@ -32,11 +32,11 @@ session = Session(engine)
 #################################################
 # Flask Setup
 #################################################
-app = Flask(__name__)
+#app = Flask(__name__)
 
-if __name__ == '__main__':
-    app = create_app()
-    app.run()
+#if __name__ == '__main__':
+ #   app = create_app()
+  #  app.run()
 
 #################################################
 # Flask Routes
