@@ -9,7 +9,6 @@ from sqlalchemy import create_engine, func
 from flask import Flask, jsonify
 
 
-
 #################################################
 # Database Setup
 #################################################
@@ -22,8 +21,10 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 
 # Save references to each table
-Measurement = Base.classes.hawaii_measurements  
-Station = Base.classes.hawaii_stations
+Measurement = Base.classes.measurement
+Station = Base.classes.station
+#Measurement = Base.classes.hawaii_measurements  
+#Station = Base.classes.hawaii_stations
 
 # Create our session (link) from Python to the DB
 session = Session(engine)
@@ -38,6 +39,7 @@ app = Flask(__name__)
 #################################################
 # Flask Routes
 #################################################
+@app.route("/")
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     # Calculate the date 12 months ago from the most recent date
@@ -46,7 +48,9 @@ def precipitation():
     
     # Query precipitation data for the last 12 months
     results = session.query(Measurement.date, Measurement.prcp).\
-                filter(Measurement.date >= twelve_months_ago).all()
+    filter(Measurement.date >= twelve_months_ago.strftime('%Y-%m-%d')).all()
+    #results = session.query(Measurement.date, Measurement.prcp).\
+     #           filter(Measurement.date >= twelve_months_ago).all()
     
     # Convert results into a dictionary with date as key and precipitation as value
     precipitation_data = {date: prcp for date, prcp in results}
