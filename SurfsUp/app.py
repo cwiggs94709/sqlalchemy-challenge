@@ -12,6 +12,7 @@ from flask import Flask, jsonify
 #################################################
 # Database Setup
 #################################################
+
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
 
 # reflect an existing database into a new model
@@ -32,7 +33,7 @@ session = Session(engine)
 #################################################
 # Flask Setup
 #################################################
-#app = Flask(__name__)
+app = Flask(__name__)
 
 #if __name__ == '__main__':
  #   app = create_app()
@@ -42,6 +43,17 @@ session = Session(engine)
 # Flask Routes
 #################################################
 @app.route("/")
+def home():
+    return (f"Home Page</br>"
+    f"For Precipitation data: /api/v1.0/precipitation </br>")
+    f"For Station data: /api/v1.0/stations </br>")
+    f"For tobs data: /api/v1.0/tobs </br>")
+    f"For start: /api/v1.0/<start> </br>")
+    f"For end: /api/v1.0/<start>/<end> ")
+
+    
+
+
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     # Calculate the date 12 months ago from the most recent date
